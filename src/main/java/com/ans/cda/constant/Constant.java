@@ -11,6 +11,123 @@ public class Constant {
 	 */
 	public static final String RETOURCHARIOT = "\n";
 	/**
+	 * APIPATH
+	 */
+	public static final String APIPATH = "\\API";
+	/**
+	 * CMD
+	 */
+	public static final String CMD = "cmd.exe";
+	/**
+	 * IHEXDM
+	 */
+	public static final String IHEXDM =  "\\IHE_XDM.ZIP ";
+	/**
+	 * EMETTEUR
+	 */
+	public static final String EMETTEUR = "Emetteur : \n";
+	/**
+	 * NAME
+	 */
+	public static final String NAME = "    . Nom : ";
+	/**
+	 * VERSION
+	 */
+	public static final String VERSION = "    . Version : 1.2 \n";
+	/**
+	 * HTM
+	 */
+	public static final String HTM = "</html> \n";
+	/**
+	 * HREF
+	 */
+	public static final String HREF = "Voir le fichier <a href=\"README.TXT\">ReadMe</a>" + "\n";
+	/**
+	 * EMT
+	 */
+	public static final String EMT = "Emetteur : ";
+	/**
+	 * HTML
+	 */
+	public static final String HTML = "<html> \n";
+	/**
+	 * HEADER
+	 */
+	public static final String HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n";
+	/**
+	 * DOCTYPE
+	 */
+	public static final String DOCTYPE = "<!DOCTYPE html PUBLIC \"-//W3C/DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> \n";
+	/**
+	 * DOC
+	 */
+	public static final String DOC = "                DOC0001.XML \n";
+	/**
+	 * METADATA
+	 */
+	public static final String METADATA = "                METADATA.XML \n";
+	/**
+	 * Subset
+	 */
+	public static final String SUBSET = "           +SUBSET01 \n";
+	/**
+	 * IHE
+	 */
+	public static final String IHE = "     + IHE_XDM \n";
+	/**
+	 * INDEX
+	 */
+	public static final String INDEX = "     INDEX.HTM \n";
+	/**
+	 * README
+	 */
+	public static final String README = "     README.TXT \n";
+	/**
+	 * arborescence
+	 */
+	public static final String ARBO = "Arborescence : \n";
+	/**
+	 * EDITEUR
+	 */
+	public static final String EDITEUR = "    . Editeur : ADK Software Limited \n\n";
+	/**
+	 * INSTRUCTION
+	 */
+	public static final String INSTRUCTION = "Instructions : \n";
+	/**
+	 * MESSAGERIE
+	 */
+	public static final String MESSAGERIE = ". Consultez les fichiers reçus par messagerie securisee de sante dans votre logiciel de professionnel de sante. \n\n";
+	/**
+	 * ORGANISME
+	 */
+	public static final String ORGANISME = "    . Organisme : ";
+	/**
+	 * ADRESS
+	 */
+	public static final String ADRESS = "    . Adresse : ";
+	/**
+	 * ADK
+	 */
+ 	public static final String ADK =  "    . Nom : ADK Healthcare \n";
+	/**
+	 * APPEMETT
+	 */
+	public static final String APPEMETT = "Application de l'emetteur : \n";
+	
+	/**
+	 * TEL
+	 */
+	public static final String TEL =  "    . Téléphone : ";
+	/**
+	 * LINE
+	 */
+	public static final String LINE = "============= \n";
+	/**
+	 * SLASHC
+	 */
+	public static final String SLASHC = "/c";
+	/**
 	 * API
 	 */
 	public static final String API = "API";

@@ -244,29 +244,31 @@ public final class ConvertJsonToXML {
 						final ObjectMapper objectMapper = new ObjectMapper();
 						final JsonNode root = objectMapper.readTree(new File(file.getAbsolutePath()));
 						final JsonNode field1 = root.get("entry");
-						if (field1.isArray()) {
-							for (final JsonNode objNode : field1) {
-								final JsonNode field2 = objNode.get("resource");
-								for (final JsonNode objNode2 : field2) {
-									try {
-										if (objNode2.toString().startsWith("[{\"system\":")) {
-											final String identifier2 = objNode2.toString();
-											final String[] wordT = identifier2.split("urn:oid:");
-											final String words0T = wordT[1];
-											final String[] wordTT = words0T.split("\"}]");
-											final String words1T = wordTT[0];
-											concept.setAttribute("codeSystem", words1T);
-											break;
-										}
-									} catch (final Exception e) {
-										if (LOG.isInfoEnabled()) {
-											final String error = e.getMessage();
-											LOG.error(error);
+						if (field1 != null) {
+							if (field1.isArray()) {
+								for (final JsonNode objNode : field1) {
+									final JsonNode field2 = objNode.get("resource");
+									for (final JsonNode objNode2 : field2) {
+										try {
+											if (objNode2.toString().startsWith("[{\"system\":")) {
+												final String identifier2 = objNode2.toString();
+												final String[] wordT = identifier2.split("urn:oid:");
+												final String words0T = wordT[1];
+												final String[] wordTT = words0T.split("\"}]");
+												final String words1T = wordTT[0];
+												concept.setAttribute("codeSystem", words1T);
+												break;
+											}
+										} catch (final Exception e) {
+											if (LOG.isInfoEnabled()) {
+												final String error = e.getMessage();
+												LOG.error(error);
+											}
 										}
 									}
 								}
 							}
-						}
+						} 
 					} else if (name.startsWith("TRE")) {
 						concept.setAttribute("codeSystem", concepT.getCodeSystem());
 					}
@@ -308,8 +310,6 @@ public final class ConvertJsonToXML {
 		Transformer transformer = transformerFac.newTransformer();
 		transformer.setOutputProperty(OutputKeys.INDENT, Constant.YES);
 		transformer.setOutputProperty(OutputKeys.ENCODING, Constant.UTF8);
-//		transformer.setOutputProperty(OutputKeys.METHOD, Constant.XML);
-//		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, Constant.YES);
 		final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		try (InputStream iStream = classloader.getResourceAsStream(Constant.PRETTY)) {
 			transformer = transformerFac.newTransformer(new StreamSource(iStream));

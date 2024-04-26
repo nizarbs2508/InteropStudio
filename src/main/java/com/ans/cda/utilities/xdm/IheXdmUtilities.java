@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import com.ans.cda.constant.Constant;
 
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.SaxonApiException;
@@ -27,12 +27,6 @@ import net.sf.saxon.s9api.XdmNode;
  * @author bensa
  */
 public class IheXdmUtilities {
-
-	/**
-	 * filesListInDir
-	 */
-	private static final List<String> filesListInDir = new ArrayList<>();
-
 	/**
 	 * Logger
 	 */
@@ -48,29 +42,28 @@ public class IheXdmUtilities {
 			final String sAdresseAuteur, final String sTelephoneAuteur) {
 		try {
 			final FileWriter myWriter = new FileWriter(file);
-			myWriter.write("Emetteur : \n");
-			myWriter.write("============= \n");
-			myWriter.write("    . Nom : " + sSuffix + " " + sPrenomAuteur + " " + sNomAuteur + "\n");
-			myWriter.write("    . Organisme : " + sOrganisme + " (" + sOrganismeFiness + ") " + "\n");
-			myWriter.write("    . Adresse : " + sAdresseAuteur + "\n");
-			myWriter.write("    . Téléphone : " + sTelephoneAuteur + "\n\n");
-			myWriter.write("Application de l'emetteur : \n");
-			myWriter.write("============= \n");
-			myWriter.write("    . Nom : ADK Healthcare \n");
-			myWriter.write("    . Version : 1.2 \n");
-			myWriter.write("    . Editeur : ADK Software Limited \n\n");
-			myWriter.write("Instructions : \n");
-			myWriter.write("============= \n");
-			myWriter.write(
-					". Consultez les fichiers reçus par messagerie securisee de sante dans votre logiciel de professionnel de sante. \n\n");
-			myWriter.write("Arborescence : \n");
-			myWriter.write("============= \n");
-			myWriter.write("     README.TXT \n");
-			myWriter.write("     INDEX.HTM \n");
-			myWriter.write("     + IHE_XDM \n");
-			myWriter.write("           +SUBSET01 \n");
-			myWriter.write("                METADATA.XML \n");
-			myWriter.write("                DOC0001.XML \n");
+			myWriter.write(Constant.EMETTEUR);
+			myWriter.write(Constant.LINE);
+			myWriter.write(Constant.NAME + sSuffix + " " + sPrenomAuteur + " " + sNomAuteur + "\n");
+			myWriter.write(Constant.ORGANISME + sOrganisme + " (" + sOrganismeFiness + ") " + "\n");
+			myWriter.write(Constant.ADRESS + sAdresseAuteur + "\n");
+			myWriter.write(Constant.TEL + sTelephoneAuteur + "\n\n");
+			myWriter.write(Constant.APPEMETT);
+			myWriter.write(Constant.LINE);
+			myWriter.write(Constant.ADK);
+			myWriter.write(Constant.VERSION);
+			myWriter.write(Constant.EDITEUR);
+			myWriter.write(Constant.INSTRUCTION);
+			myWriter.write(Constant.LINE);
+			myWriter.write(Constant.MESSAGERIE);
+			myWriter.write(Constant.ARBO);
+			myWriter.write(Constant.LINE);
+			myWriter.write(Constant.README);
+			myWriter.write(Constant.INDEX);
+			myWriter.write(Constant.IHE);
+			myWriter.write(Constant.SUBSET);
+			myWriter.write(Constant.METADATA);
+			myWriter.write(Constant.DOC);
 			myWriter.close();
 		} catch (final IOException e) {
 			if (LOG.isInfoEnabled()) {
@@ -90,13 +83,12 @@ public class IheXdmUtilities {
 	public static void writeToHtmFile(final String file, final String sOrganisme, final String sOrganismeFiness) {
 		try {
 			final FileWriter myWriter = new FileWriter(file);
-			myWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n");
-			myWriter.write(
-					"<!DOCTYPE html PUBLIC \"-//W3C/DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> \n");
-			myWriter.write("<html> \n");
-			myWriter.write("Emetteur : " + sOrganisme + " (" + sOrganismeFiness + ")" + "\n");
-			myWriter.write("Voir le fichier <a href=\"README.TXT\">ReadMe</a>" + "\n");
-			myWriter.write("</html> \n");
+			myWriter.write(Constant.HEADER);
+			myWriter.write(Constant.DOCTYPE);
+			myWriter.write(Constant.HTML);
+			myWriter.write(Constant.EMT + sOrganisme + " (" + sOrganismeFiness + ")" + "\n");
+			myWriter.write(Constant.HREF);
+			myWriter.write(Constant.HTM);
 			myWriter.close();
 		} catch (final IOException e) {
 			if (LOG.isInfoEnabled()) {
@@ -213,15 +205,16 @@ public class IheXdmUtilities {
 
 	/**
 	 * compressFolder
+	 * 
 	 * @param path
 	 * @param contenuZip
 	 */
 	public static void compressFolder(final Path path, final Path contenuZip) {
 		final String strPath = contenuZip.toString() + "\\*";
 		final Path resourceDirectory = Paths.get("src", "main", "resources");
-		final String absolutePath = resourceDirectory.toFile().getAbsolutePath() + "\\API";
-		final String[] params = new String[] { "cmd.exe", "/c",
-				"7z a " + path.toString() + "\\IHE_XDM.ZIP " + "\"" + strPath + "\"" };
+		final String absolutePath = resourceDirectory.toFile().getAbsolutePath() + Constant.APIPATH;
+		final String[] params = new String[] { Constant.CMD, Constant.SLASHC,
+				"7z a " + path.toString() + Constant.IHEXDM + "\"" + strPath + "\"" };
 		try {
 			final ProcessBuilder builder = new ProcessBuilder();
 			builder.directory(new File(absolutePath));
@@ -230,7 +223,7 @@ public class IheXdmUtilities {
 			final Process process = builder.start();
 			final InputStream is = process.getInputStream();
 			new Thread(() -> {
-				try (BufferedReader reader = new BufferedReader(new InputStreamReader(is));) {
+				try (final BufferedReader reader = new BufferedReader(new InputStreamReader(is));) {
 					String line = null;
 					while ((line = reader.readLine()) != null) {
 						// TODO: handle line
@@ -259,7 +252,5 @@ public class IheXdmUtilities {
 				LOG.error(error);
 			}
 		}
-
 	}
-
 }
