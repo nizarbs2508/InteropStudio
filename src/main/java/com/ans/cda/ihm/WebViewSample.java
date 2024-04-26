@@ -1,15 +1,18 @@
 package com.ans.cda.ihm;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
@@ -23,6 +26,7 @@ import com.ans.cda.constant.Constant;
 import com.ans.cda.service.bom.BomService;
 import com.ans.cda.service.crossvalidation.CrossValidationService;
 import com.ans.cda.service.validation.ValidationService;
+import com.ans.cda.service.xdm.IheXdmService;
 import com.ans.cda.service.xdm.XdmService;
 import com.ans.cda.utilities.general.LocalUtility;
 
@@ -67,6 +71,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -716,6 +721,18 @@ public class WebViewSample extends Application {
 									try {
 										targetStream = new FileInputStream(initialFile);
 										textArea.setText(readFileContents(targetStream));
+										final Alert alert = new Alert(AlertType.INFORMATION);
+										final DialogPane dialogPane = alert.getDialogPane();
+										dialogPane.getStylesheets()
+												.add(getClass().getResource(Constant.CSS).toExternalForm());
+										dialogPane.getStyleClass().add(Constant.DIALOG);
+										dialogPane.setMinHeight(130);
+										dialogPane.setMaxHeight(130);
+										dialogPane.setPrefHeight(130);
+										alert.setContentText("Traitement terminé avec succès");
+										alert.setHeaderText(null);
+										alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(true);
+										alert.showAndWait();
 									} catch (final FileNotFoundException e) {
 										if (LOG.isInfoEnabled()) {
 											final String error = e.getMessage();
@@ -773,7 +790,24 @@ public class WebViewSample extends Application {
 							@Override
 							public void handle(final ActionEvent event) {
 								Platform.runLater(() -> {
-
+									DirectoryChooser directoryChooser = new DirectoryChooser();
+									directoryChooser.setInitialDirectory(new File("C:\\"));
+									File selectedDirectory = directoryChooser.showDialog(stageTwo);
+									if (names != null && !names.isEmpty()) {
+										IheXdmService.generateIheXdmZip(names, selectedDirectory.getAbsolutePath());
+										final Alert alert = new Alert(AlertType.INFORMATION);
+										final DialogPane dialogPane = alert.getDialogPane();
+										dialogPane.getStylesheets()
+												.add(getClass().getResource(Constant.CSS).toExternalForm());
+										dialogPane.getStyleClass().add(Constant.DIALOG);
+										dialogPane.setMinHeight(130);
+										dialogPane.setMaxHeight(130);
+										dialogPane.setPrefHeight(130);
+										alert.setContentText("Traitement terminé avec succès");
+										alert.setHeaderText(null);
+										alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(true);
+										alert.showAndWait();
+									}
 								});
 							}
 						});
@@ -789,6 +823,56 @@ public class WebViewSample extends Application {
 						buttonVal.setTooltip(tooltipVal);
 						buttonVal.setPadding(new Insets(0, 0, 0, 10));
 
+						buttonVal.setOnAction(new EventHandler<>() {
+							@Override
+							public void handle(final ActionEvent event) {
+								Platform.runLater(() -> {
+									try {
+										if (!textArea.getText().isEmpty()) {
+											final Path temp = Files.createTempFile("META", ".xml");
+											final BufferedWriter writer = new BufferedWriter(
+													new FileWriter(temp.toFile()));
+											writer.write(textArea.getText());
+											writer.close();
+											ValidationService.validateMeta(temp.toFile(), Constant.MODEL,
+													Constant.ASIPXDM, Constant.URLVALIDATION);
+											final Alert alert = new Alert(AlertType.INFORMATION);
+											final DialogPane dialogPane = alert.getDialogPane();
+											dialogPane.getStylesheets()
+													.add(getClass().getResource(Constant.CSS).toExternalForm());
+											dialogPane.getStyleClass().add(Constant.DIALOG);
+											dialogPane.setMinHeight(130);
+											dialogPane.setMaxHeight(130);
+											dialogPane.setPrefHeight(130);
+											alert.setContentText("Traitement terminé avec succès");
+											alert.setHeaderText(null);
+											alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(true);
+											alert.showAndWait();
+											temp.toFile().delete();
+										} else {
+											final Alert alert = new Alert(AlertType.ERROR);
+											final DialogPane dialogPane = alert.getDialogPane();
+											dialogPane.getStylesheets()
+													.add(getClass().getResource(Constant.CSS).toExternalForm());
+											dialogPane.getStyleClass().add(Constant.DIALOG);
+											dialogPane.setMinHeight(130);
+											dialogPane.setMaxHeight(130);
+											dialogPane.setPrefHeight(130);
+											alert.setContentText("Merci de renseigner le METADATA d'abord");
+											alert.setHeaderText(null);
+											alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(true);
+											alert.showAndWait();
+										}
+									} catch (final IOException e) {
+										if (LOG.isInfoEnabled()) {
+											final String error = e.getMessage();
+											LOG.error(error);
+										}
+									}
+								});
+							}
+						});
+
 						final Button buttonCrossVal = new Button();
 						final ImageView viewCrossVal = new ImageView(Constant.CROSS);
 						buttonCrossVal.setGraphic(viewCrossVal);
@@ -799,6 +883,56 @@ public class WebViewSample extends Application {
 						final Tooltip tooltipCrossVal = new Tooltip("Cross-Valider les fichiers CDA et META");
 						buttonCrossVal.setTooltip(tooltipCrossVal);
 						buttonCrossVal.setPadding(new Insets(0, 0, 0, 10));
+
+						buttonCrossVal.setOnAction(new EventHandler<>() {
+							@Override
+							public void handle(final ActionEvent event) {
+								Platform.runLater(() -> {
+									try {
+										if (!textArea.getText().isEmpty()) {
+											final Path temp = Files.createTempFile("CROSS", ".xml");
+											final BufferedWriter writer = new BufferedWriter(
+													new FileWriter(temp.toFile()));
+											writer.write(textArea.getText());
+											writer.close();
+											CrossValidationService.crossValidate(new File(names.get(0)), temp.toFile(),
+													Constant.URLVALIDATION);
+											final Alert alert = new Alert(AlertType.INFORMATION);
+											final DialogPane dialogPane = alert.getDialogPane();
+											dialogPane.getStylesheets()
+													.add(getClass().getResource(Constant.CSS).toExternalForm());
+											dialogPane.getStyleClass().add(Constant.DIALOG);
+											dialogPane.setMinHeight(130);
+											dialogPane.setMaxHeight(130);
+											dialogPane.setPrefHeight(130);
+											alert.setContentText("Traitement terminé avec succès");
+											alert.setHeaderText(null);
+											alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(true);
+											alert.showAndWait();
+											temp.toFile().delete();
+										} else {
+											final Alert alert = new Alert(AlertType.ERROR);
+											final DialogPane dialogPane = alert.getDialogPane();
+											dialogPane.getStylesheets()
+													.add(getClass().getResource(Constant.CSS).toExternalForm());
+											dialogPane.getStyleClass().add(Constant.DIALOG);
+											dialogPane.setMinHeight(130);
+											dialogPane.setMaxHeight(130);
+											dialogPane.setPrefHeight(130);
+											alert.setContentText("Merci de renseigner le METADATA d'abord");
+											alert.setHeaderText(null);
+											alert.getDialogPane().lookupButton(ButtonType.OK).setVisible(true);
+											alert.showAndWait();
+										}
+									} catch (final IOException e) {
+										if (LOG.isInfoEnabled()) {
+											final String error = e.getMessage();
+											LOG.error(error);
+										}
+									}
+								});
+							}
+						});
 
 						final Button buttonVerif = new Button();
 						final ImageView viewVerif = new ImageView(Constant.CHECK);
