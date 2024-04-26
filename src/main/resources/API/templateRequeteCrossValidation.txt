@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validation xmlns="http://evsobjects.gazelle.ihe.net/">
+    <validationService xmlns="http://evsobjects.gazelle.ihe.net/" name="CROSS_VALIDATEUR_GENERIQUE" validator="CROSS_VALIDATEUR_GENERIQUE"/>
+    <object xmlns="http://evsobjects.gazelle.ihe.net/" role="ITI-32_CDA_Document_1" originalFileName="DOC0001.XML">
+        <content>$ENCODED_CDA$</content>
+	</object>
+    <object xmlns="http://evsobjects.gazelle.ihe.net/" role="ITI-32_XDS_Metadata" originalFileName="METADATA.XML">
+        <content>$ENCODED_METADATA$</content>
+    </object>
+</validation>

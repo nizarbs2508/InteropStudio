@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validation xmlns="http://evsobjects.gazelle.ihe.net/">
+    <validationService xmlns="http://evsobjects.gazelle.ihe.net/" name="$VALIDATION-SERVICE-NAME$" validator="$VALIDATOR$"/>
+    <object xmlns="http://evsobjects.gazelle.ihe.net/" originalFileName="DOC1.XML">
+        <content>$CONTENT$</content>
+    </object>
+</validation>
